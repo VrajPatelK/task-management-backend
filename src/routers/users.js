@@ -6,14 +6,24 @@ import {
   getUserByIdApi,
   updateUserByIdApi,
   deleteUserByIdApi,
+  loginApi,
 } from "../controllers/users.js";
 const router = Router();
 
-router.get("/", getAllUsersApi);
+import { generateToken } from "../middlewares/generateToken.js";
+import { isAuthenticated } from "../middlewares/authentication.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
+
+router.post("/login", generateToken, loginApi);
+
+router.use(isAuthenticated);
+
+router.get("/", isAdmin, getAllUsersApi);
+router.post("/create", isAdmin, createNewUserApi);
+router.get("/user_type/:user_type", isAdmin, getUsersByUserTypeApi);
+router.delete("/delete/:userId", isAdmin, deleteUserByIdApi);
+
 router.get("/:userId", getUserByIdApi);
-router.get("/user_type/:user_type", getUsersByUserTypeApi);
-router.post("/create", createNewUserApi);
 router.put("/edit/:userId", updateUserByIdApi);
-router.delete("/delete/:userId", deleteUserByIdApi);
 
 export default router;

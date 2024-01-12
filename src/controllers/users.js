@@ -1,5 +1,7 @@
 import { pool } from "../db/credential.js";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
+import cookie from "cookie";
 
 import {
   createNewUser,
@@ -10,6 +12,7 @@ import {
   updateUserById,
   updateUserWithProfileImgById,
   deleteUserById,
+  getUserByEmail,
 } from "../queries/users.js";
 
 async function createNewUserApi(req, res) {
@@ -133,6 +136,19 @@ async function deleteUserByIdApi(req, res) {
   }
 }
 
+async function loginApi(req, res) {
+  try {
+    //
+    return res.status(200).json({
+      message: "signed in!",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+
 export {
   createNewUserApi,
   getAllUsersApi,
@@ -140,4 +156,5 @@ export {
   getUserByIdApi,
   updateUserByIdApi,
   deleteUserByIdApi,
+  loginApi,
 };
