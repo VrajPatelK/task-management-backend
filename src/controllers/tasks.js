@@ -106,7 +106,6 @@ async function updateTaskByIdApi(req, res) {
 
   const result = exportKeysForUpdate(keys);
   var query = updateTaskById(result);
-  console.log(keys);
 
   try {
     let records = await pool.query(query, values);

@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken";
-import cookie from "cookie";
 import { config } from "dotenv";
 config();
 
