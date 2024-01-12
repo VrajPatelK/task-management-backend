@@ -49,6 +49,11 @@ async function createNewUserApi(req, res) {
 async function getAllUsersApi(req, res) {
   try {
     let records = await pool.query(getAllUsers);
+    if (!records.rowCount) {
+      return res.status(404).json({
+        message: "resource does not found!",
+      });
+    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -67,6 +72,11 @@ async function getUsersByUserTypeApi(req, res) {
       return res.status(404).json({ message: "user type doesn't found" });
     }
     let records = await pool.query(getUsersByUserType, [user_type]);
+    if (!records.rowCount) {
+      return res.status(404).json({
+        message: "resource does not found!",
+      });
+    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -79,6 +89,11 @@ async function getUserByIdApi(req, res) {
   const { userId } = req.params;
   try {
     let records = await pool.query(getUserById, [userId]);
+    if (!records.rowCount) {
+      return res.status(404).json({
+        message: "resource does not found!",
+      });
+    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
