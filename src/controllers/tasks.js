@@ -5,6 +5,7 @@ import {
   deleteTaskById,
   getAllTasks,
   getTaskById,
+  getTaskByUserId,
   getAllTasksByUserId,
   updateTaskById,
 } from "../queries/tasks.js";
@@ -51,6 +52,19 @@ async function getTaskByIdApi(req, res) {
       .json({ message: "Internal Server Error", errorMessage: error.message });
   }
 }
+
+async function getTaskByUserIdApi(req, res) {
+  const { taskId, userId } = req.params;
+  try {
+    let records = await pool.query(getTaskByUserId, [taskId, userId]);
+    return res.status(200).json(records.rows);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+
 async function getAllTasksByUserIdApi(req, res) {
   const { userId } = req.params;
   try {
@@ -65,12 +79,14 @@ async function getAllTasksByUserIdApi(req, res) {
 
 async function updateTaskByIdApi(req, res) {
   const { taskId } = req.params;
+
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
   values.unshift(taskId);
 
   const result = exportKeysForUpdate(keys);
   var query = updateTaskById(result);
+  console.log(keys);
 
   try {
     let records = await pool.query(query, values);
@@ -101,6 +117,7 @@ export {
   createNewTaskApi,
   getAllTasksApi,
   getTaskByIdApi,
+  getTaskByUserIdApi,
   getAllTasksByUserIdApi,
   updateTaskByIdApi,
   deleteTaskByIdApi,

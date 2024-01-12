@@ -5,7 +5,7 @@ config();
 
 async function isDeveloper(req, res, next) {
   try {
-    const user_details = req.body?.user_details;
+    const user_details = req?.user_details;
 
     if (user_details.user_type !== process.env.DEVELOPER_ROLE) {
       return res.status(401).json({

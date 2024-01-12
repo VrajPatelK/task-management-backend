@@ -3,7 +3,7 @@ config();
 
 async function isAuthorized(req, res, next) {
   try {
-    const user_details = req.body?.user_details;
+    const user_details = req?.user_details;
     const { userId } = req.params;
 
     if (user_details.id !== parseInt(userId)) {
@@ -11,7 +11,7 @@ async function isAuthorized(req, res, next) {
         message: "unauthorized user !",
       });
     }
-    return next();
+    next();
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",

@@ -7,10 +7,16 @@ VALUES
 const getAllTasks = `SELECT * FROM TASKS`;
 const getAllTasksByUserId = `SELECT * FROM TASKS WHERE assigned_to = $1`;
 const getTaskById = `SELECT * FROM TASKS WHERE id = $1`;
+const getTaskByUserId = `SELECT * FROM TASKS WHERE id = $1 AND assigned_to = $2`;
 const updateTaskById = (columns) => `
 UPDATE TASKS
 SET
 ${columns}
+WHERE id = $1`;
+const updateTaskStatusById = `
+UPDATE TASKS
+SET
+status
 WHERE id = $1`;
 
 const deleteTaskById = `DELETE FROM TASKS WHERE id = $1`;
@@ -20,6 +26,7 @@ export {
   getAllTasks,
   getTaskById,
   getAllTasksByUserId,
+  getTaskByUserId,
   updateTaskById,
   deleteTaskById,
 };

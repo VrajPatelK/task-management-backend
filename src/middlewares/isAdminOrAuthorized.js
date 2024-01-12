@@ -1,17 +1,20 @@
-import jwt from "jsonwebtoken";
-import cookie from "cookie";
 import { config } from "dotenv";
 config();
 
-async function isAdmin(req, res, next) {
+async function isAdminOrAuthorized(req, res, next) {
   try {
     const user_details = req?.user_details;
+    const { userId } = req.params;
 
-    if (user_details.user_type !== process.env.ADMIN_ROLE) {
+    if (
+      user_details.user_type !== process.env.ADMIN_ROLE &&
+      user_details.id !== parseInt(userId)
+    ) {
       return res.status(401).json({
-        message: "unauthorized user type !",
+        message: "unauthorized user type or. user !",
       });
     }
+
     next();
   } catch (error) {
     return res.status(500).json({
@@ -21,4 +24,4 @@ async function isAdmin(req, res, next) {
   }
 }
 
-export { isAdmin };
+export { isAdminOrAuthorized };

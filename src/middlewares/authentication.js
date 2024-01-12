@@ -14,7 +14,7 @@ async function isAuthenticated(req, res, next) {
     // if signature in wrong the automatically throw error and
     // we can't move on (means next() will not get execution)
     // so, no need to check "isVerified?"
-    req.body.user_details = isVerified;
+    req.user_details = isVerified;
     next();
   } catch (error) {
     return res.status(500).json({
