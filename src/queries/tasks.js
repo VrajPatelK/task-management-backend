@@ -4,8 +4,15 @@ INSERT INTO TASKS
 VALUES
 (${colNumbers})`;
 
-const getAllTasks = `SELECT * FROM TASKS`;
-const getAllTasksByUserId = `SELECT * FROM TASKS WHERE assigned_to = $1`;
+const getAllTasks = `
+SELECT * FROM 
+TASKS T INNER JOIN USERS U ON
+T.assigned_to = U.ID`;
+const getAllTasksByUserId = `
+SELECT * FROM 
+TASKS T INNER JOIN USERS U ON
+T.assigned_to = U.ID
+WHERE assigned_to = $1`;
 const getTaskById = `SELECT * FROM TASKS WHERE id = $1`;
 const getTaskByUserId = `SELECT * FROM TASKS WHERE id = $1 AND assigned_to = $2`;
 const updateTaskById = (columns) => `
