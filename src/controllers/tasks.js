@@ -33,11 +33,6 @@ async function createNewTaskApi(req, res) {
 async function getAllTasksApi(req, res) {
   try {
     let records = await pool.query(getAllTasks);
-    if (!records.rowCount) {
-      return res.status(404).json({
-        message: "resource does not found!",
-      });
-    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -50,11 +45,6 @@ async function getTaskByIdApi(req, res) {
   const { taskId } = req.params;
   try {
     let records = await pool.query(getTaskById, [taskId]);
-    if (!records.rowCount) {
-      return res.status(404).json({
-        message: "resource does not found!",
-      });
-    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -67,11 +57,6 @@ async function getTaskByUserIdApi(req, res) {
   const { taskId, userId } = req.params;
   try {
     let records = await pool.query(getTaskByUserId, [taskId, userId]);
-    if (!records.rowCount) {
-      return res.status(404).json({
-        message: "resource does not found!",
-      });
-    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -84,11 +69,6 @@ async function getAllTasksByUserIdApi(req, res) {
   const { userId } = req.params;
   try {
     let records = await pool.query(getAllTasksByUserId, [userId]);
-    if (!records.rowCount) {
-      return res.status(404).json({
-        message: "resource does not found!",
-      });
-    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
