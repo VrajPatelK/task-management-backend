@@ -5,14 +5,14 @@ VALUES
 (${colNumbers})`;
 
 const getAllTasks = `
-SELECT * FROM 
+SELECT T.*, U.EMAIL, U.USERNAME, U.PASSWORD, U.USER_TYPE, U.PROFILE_IMG FROM 
 TASKS T INNER JOIN USERS U ON
-T.assigned_to = U.ID`;
+T.assigned_to = U.ID;`;
 const getAllTasksByUserId = `
-SELECT * FROM 
+SELECT T.*, U.EMAIL, U.USERNAME, U.PASSWORD, U.USER_TYPE, U.PROFILE_IMG FROM 
 TASKS T INNER JOIN USERS U ON
 T.assigned_to = U.ID
-WHERE assigned_to = $1`;
+WHERE T.assigned_to = $1`;
 const getTaskById = `SELECT * FROM TASKS WHERE id = $1`;
 const getTaskByUserId = `SELECT * FROM TASKS WHERE id = $1 AND assigned_to = $2`;
 const updateTaskById = (columns) => `

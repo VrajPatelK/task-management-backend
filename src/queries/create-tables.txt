@@ -16,7 +16,7 @@ CREATE TABLE TASKS
 (
     id SERIAL,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
     status VARCHAR(255) CHECK(status = 'pending' or status = 'in-progress' or status = 'completed') DEFAULT 'pending',
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     deadline timestamp DEFAULT (CURRENT_TIMESTAMP + INTERVAL '7 days'),
@@ -27,3 +27,31 @@ CREATE TABLE TASKS
     FOREIGN KEY(created_by) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(assigned_to) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE
 )
+
+
+-- USERS
+INSERT INTO USERS (email, username, password, user_type)
+VALUES 
+('jane.smith@gmail.com', 'jane_smith', '123', 'developer'),
+('michael.jones@gmail.com', 'michael_jones', '123', 'developer'),
+('susan.jenkins@gmail.com', 'susan_jenkins', '123', 'developer'),
+('robert.johnson@gmail.com', 'robert_johnson', '123', 'developer'),
+('emily.wilson@gmail.com', 'emily_wilson', '123', 'developer'),
+('brian.miller@gmail.com', 'brian_miller', '123', 'developer'),
+('olivia.jackson@gmail.com', 'olivia_jackson', '123', 'developer'),
+('david.smith@gmail.com', 'david_smith', '123', 'developer'),
+('sophia.brown@gmail.com', 'sophia_brown', '123', 'developer');
+
+-- TASKS
+INSERT INTO TASKS (title, description, status, created_by, assigned_to)
+VALUES 
+('Build Landing Page', 'Develop a visually appealing landing page for the website with modern design elements.', 'in-progress', 1, 4),
+('Bug Fixing in Backend', 'Identify and fix bugs in the backend code to ensure the smooth functioning of the application.', 'pending', 1, 7),
+('Database Optimization', 'Optimize the database queries and improve overall database performance for better response times.', 'completed', 1, 9),
+('Mobile App Development', 'Collaborate on the development of a mobile application with a focus on user-friendly features and responsiveness.', 'in-progress', 1, 8),
+('User Authentication System', 'Implement a secure user authentication system to enhance the security of the application.', 'pending', 1, 10),
+('Design UI/UX Mockups', 'Create detailed UI/UX mockups for the upcoming features based on user requirements and feedback.', 'completed', 1, 11),
+('Server Deployment', 'Deploy the application on a production server and ensure seamless integration with the existing infrastructure.', 'in-progress', 1, 6),
+('Performance Testing', 'Conduct thorough performance testing to identify and resolve any bottlenecks for optimal application speed.', 'pending', 1, 12),
+('Documentation Update', 'Update and maintain project documentation for better collaboration and future references.', 'completed', 1, 13),
+('API Integration', 'Integrate external APIs to enhance the functionality of the application and provide additional features.', 'in-progress', 1, 14);
