@@ -8,8 +8,10 @@ import {
   getUserById,
   updateUserById,
   deleteUserById,
+  getAllUsersBySearch,
 } from "../queries/users.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
+import format from "pg-format";
 
 async function createNewUserApi(req, res) {
   var keys = Object.keys(req.body);
@@ -53,6 +55,25 @@ async function getUsersByUserTypeApi(req, res) {
       return res.status(404).json({ message: "user type doesn't found" });
     }
     let records = await pool.query(getUsersByUserType, [user_type]);
+    return res.status(200).json(records.rows);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+
+async function getAllUsersBySearchApi(req, res) {
+  try {
+    const { search } = req.params;
+    var searchTerms = search
+      ?.toLowerCase()
+      .trim()
+      .split(" ")
+      .map((term) => `%${term}%`);
+    console.log(searchTerms);
+    var query = format(getAllUsersBySearch, searchTerms, searchTerms);
+    let records = await pool.query(query);
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -129,6 +150,7 @@ export {
   createNewUserApi,
   getAllUsersApi,
   getUsersByUserTypeApi,
+  getAllUsersBySearchApi,
   getUserByIdApi,
   updateUserByIdApi,
   deleteUserByIdApi,

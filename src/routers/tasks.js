@@ -7,6 +7,8 @@ import {
   deleteTaskByIdApi,
   getAllTasksByUserIdApi,
   getTaskByUserIdApi,
+  getAllTasksByStatusApi,
+  getAllTasksBySearchApi,
 } from "../controllers/tasks.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import { isAuthenticated } from "../middlewares/authentication.js";
@@ -18,6 +20,8 @@ const router = Router();
 router.use(isAuthenticated);
 
 router.get("/", isAdmin, getAllTasksApi);
+router.get("/status/:status", isAdmin, getAllTasksByStatusApi);
+router.get("/search/:search", isAdmin, getAllTasksBySearchApi);
 router.get("/users/:userId/:taskId", isAdminOrAuthorized, getTaskByUserIdApi);
 router.get("/users/:userId", isAdminOrAuthorized, getAllTasksByUserIdApi);
 router.get("/:taskId", isAdmin, getTaskByIdApi);

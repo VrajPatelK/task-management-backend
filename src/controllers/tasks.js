@@ -8,10 +8,14 @@ import {
   getTaskByUserId,
   getAllTasksByUserId,
   updateTaskById,
+  getAllTasksByStatus,
+  getAllTasksBySearch,
 } from "../queries/tasks.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
+import format from "pg-format";
 
 async function createNewTaskApi(req, res) {
+  req.body.title = req.body?.title.toLowerCase();
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
 
@@ -33,6 +37,37 @@ async function createNewTaskApi(req, res) {
 async function getAllTasksApi(req, res) {
   try {
     let records = await pool.query(getAllTasks);
+    return res.status(200).json(records.rows);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+
+async function getAllTasksByStatusApi(req, res) {
+  try {
+    const { status } = req.params;
+    let records = await pool.query(getAllTasksByStatus, [status]);
+    return res.status(200).json(records.rows);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+
+async function getAllTasksBySearchApi(req, res) {
+  try {
+    const { search } = req.params;
+    var searchTerms = search
+      ?.toLowerCase()
+      .trim()
+      .split(" ")
+      .map((term) => `%${term}%`);
+
+    var query = format(getAllTasksBySearch, searchTerms, searchTerms);
+    let records = await pool.query(query);
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -79,7 +114,7 @@ async function getAllTasksByUserIdApi(req, res) {
 
 async function updateTaskByIdApi(req, res) {
   const { taskId } = req.params;
-
+  req.body.title = req.body?.title.toLowerCase();
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
   values.unshift(taskId);
@@ -115,9 +150,11 @@ async function deleteTaskByIdApi(req, res) {
 export {
   createNewTaskApi,
   getAllTasksApi,
+  getAllTasksByStatusApi,
   getTaskByIdApi,
   getTaskByUserIdApi,
   getAllTasksByUserIdApi,
+  getAllTasksBySearchApi,
   updateTaskByIdApi,
   deleteTaskByIdApi,
 };

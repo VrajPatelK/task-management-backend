@@ -7,6 +7,7 @@ import {
   updateUserByIdApi,
   deleteUserByIdApi,
   loginApi,
+  getAllUsersBySearchApi,
 } from "../controllers/users.js";
 const router = Router();
 
@@ -19,6 +20,7 @@ router.post("/login", generateToken, loginApi);
 router.use(isAuthenticated);
 
 router.get("/", isAdmin, getAllUsersApi);
+router.get("/search/:search", isAdmin, getAllUsersBySearchApi);
 router.post("/create", isAdmin, createNewUserApi);
 router.get("/user_type/:user_type", isAdmin, getUsersByUserTypeApi);
 router.delete("/delete/:userId", isAdmin, deleteUserByIdApi);
