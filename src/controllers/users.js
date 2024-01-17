@@ -71,7 +71,7 @@ async function getAllUsersBySearchApi(req, res) {
       .trim()
       .split(" ")
       .map((term) => `%${term}%`);
-    console.log(searchTerms);
+
     var query = format(getAllUsersBySearch, searchTerms, searchTerms);
     let records = await pool.query(query);
     return res.status(200).json(records.rows);
