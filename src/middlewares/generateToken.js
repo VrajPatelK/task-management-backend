@@ -29,7 +29,8 @@ async function generateToken(req, res, next) {
 
     // token generate
     const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
-    req.token = token;
+    user.token = token;
+    req.body = user;
     next();
   } catch (error) {
     return res.status(500).json({
