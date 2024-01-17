@@ -1,13 +1,11 @@
 import jwt from "jsonwebtoken";
-import cookie from "cookie";
 import { config } from "dotenv";
 config();
 
 async function isAuthenticated(req, res, next) {
   try {
     // get token from cookie
-    const authcookie = cookie.parse(req.headers.authcookie || "");
-    const access_token = authcookie.access_token;
+    const access_token = req.headers.token;
 
     // verify token
     const isVerified = jwt.verify(access_token, process.env.JWT_SECRET_KEY);

@@ -15,7 +15,9 @@ import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
 import format from "pg-format";
 
 async function createNewTaskApi(req, res) {
-  req.body.title = req.body?.title.toLowerCase();
+  if (req.body.title) {
+    req.body.title = req.body?.title.toLowerCase();
+  }
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
 
@@ -114,7 +116,9 @@ async function getAllTasksByUserIdApi(req, res) {
 
 async function updateTaskByIdApi(req, res) {
   const { taskId } = req.params;
-  req.body.title = req.body?.title.toLowerCase();
+  if (req.body.title) {
+    req.body.title = req.body?.title.toLowerCase();
+  }
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
   values.unshift(taskId);

@@ -3,7 +3,6 @@ import { pool } from "../db/credential.js";
 import { getUserByEmail } from "../queries/users.js";
 import { config } from "dotenv";
 import bcryptjs from "bcryptjs";
-import cookie from "cookie";
 
 config();
 
@@ -30,12 +29,7 @@ async function generateToken(req, res, next) {
 
     // token generate
     const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
-
-    // store token into the cookie
-    const authCookie = cookie.serialize("access_token", token, {
-      httpOnly: true,
-    });
-    res.setHeader("authCookie", authCookie);
+    req.token = token;
     next();
   } catch (error) {
     return res.status(500).json({

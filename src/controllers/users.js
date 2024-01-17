@@ -138,6 +138,7 @@ async function loginApi(req, res) {
     //
     return res.status(200).json({
       message: "signed in!",
+      access_token: req?.token,
     });
   } catch (error) {
     return res
