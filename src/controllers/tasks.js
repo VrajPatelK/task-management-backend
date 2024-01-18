@@ -10,6 +10,8 @@ import {
   updateTaskById,
   getAllTasksByStatus,
   getAllTasksBySearch,
+  getAllTasksByStatusAndUserId,
+  getAllTasksBySearchAndUserId,
 } from "../queries/tasks.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
 import format from "pg-format";
@@ -51,6 +53,39 @@ async function getAllTasksByStatusApi(req, res) {
   try {
     const { status } = req.params;
     let records = await pool.query(getAllTasksByStatus, [status]);
+    return res.status(200).json(records.rows);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+async function getAllTasksByStatusAndUserIdApi(req, res) {
+  try {
+    const { userId, status } = req.params;
+    let records = await pool.query(getAllTasksByStatusAndUserId, [
+      userId,
+      status,
+    ]);
+    return res.status(200).json(records.rows);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", errorMessage: error.message });
+  }
+}
+
+async function getAllTasksBySearchAndUserIdApi(req, res) {
+  try {
+    const { search, userId } = req.params;
+    var searchTerms = search
+      ?.toLowerCase()
+      .trim()
+      .split(" ")
+      .map((term) => `%${term}%`);
+
+    var query = format(getAllTasksBySearchAndUserId, searchTerms, searchTerms);
+    let records = await pool.query(query, [userId]);
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
@@ -155,6 +190,8 @@ export {
   createNewTaskApi,
   getAllTasksApi,
   getAllTasksByStatusApi,
+  getAllTasksByStatusAndUserIdApi,
+  getAllTasksBySearchAndUserIdApi,
   getTaskByIdApi,
   getTaskByUserIdApi,
   getAllTasksByUserIdApi,

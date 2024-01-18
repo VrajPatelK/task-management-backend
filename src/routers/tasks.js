@@ -6,6 +6,8 @@ import {
   updateTaskByIdApi,
   deleteTaskByIdApi,
   getAllTasksByUserIdApi,
+  getAllTasksByStatusAndUserIdApi,
+  getAllTasksBySearchAndUserIdApi,
   getTaskByUserIdApi,
   getAllTasksByStatusApi,
   getAllTasksBySearchApi,
@@ -22,6 +24,16 @@ router.use(isAuthenticated);
 router.get("/", isAdmin, getAllTasksApi);
 router.get("/status/:status", isAdmin, getAllTasksByStatusApi);
 router.get("/search/:search", isAdmin, getAllTasksBySearchApi);
+router.get(
+  "/users/:userId/status/:status",
+  isAdminOrAuthorized,
+  getAllTasksByStatusAndUserIdApi
+);
+router.get(
+  "/users/:userId/search/:search",
+  isAdminOrAuthorized,
+  getAllTasksBySearchAndUserIdApi
+);
 router.get("/users/:userId/:taskId", isAdminOrAuthorized, getTaskByUserIdApi);
 router.get("/users/:userId", isAdminOrAuthorized, getAllTasksByUserIdApi);
 router.get("/:taskId", isAdmin, getTaskByIdApi);
