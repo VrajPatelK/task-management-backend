@@ -86,6 +86,9 @@ async function getUserByIdApi(req, res) {
   const { userId } = req.params;
   try {
     let records = await pool.query(getUserById, [userId]);
+    if (!records.rowCount) {
+      return res.status(404).json({ message: "user doesn't found!" });
+    }
     return res.status(200).json(records.rows);
   } catch (error) {
     return res
