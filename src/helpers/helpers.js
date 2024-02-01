@@ -14,6 +14,7 @@ function exportKeys(keys = []) {
 
   return result;
 }
+
 function exportKeysForUpdate(keys = []) {
   var result = keys.reduce(
     (acc, key, index) => (acc += `${key} = $${index + 2},`),

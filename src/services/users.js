@@ -1,4 +1,7 @@
+// PKGS
 import format from "pg-format";
+
+// IMPORTS
 import UsersQueries from "../queries/users.js";
 import DB from "../db/credential.js";
 

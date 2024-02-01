@@ -1,7 +1,9 @@
+// PKGS
 import pg from "pg";
 import { config } from "dotenv";
-config();
 
+// DB CONFIGURATION
+config();
 const DB = new pg.Client({
   user: process.env.USER,
   host: process.env.HOST,

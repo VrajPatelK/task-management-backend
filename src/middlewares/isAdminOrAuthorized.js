@@ -1,3 +1,4 @@
+// IMPORTS
 import { CONSTANTS } from "../helpers/constants.js";
 
 async function isAdminOrAuthorized(req, res, next) {

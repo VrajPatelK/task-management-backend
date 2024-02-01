@@ -1,7 +1,10 @@
+// PKGS
 import jwt from "jsonwebtoken";
+import bcryptjs from "bcryptjs";
+
+// IMPORTS
 import DB from "../db/credential.js";
 import UsersQueries from "../queries/users.js";
-import bcryptjs from "bcryptjs";
 
 async function generateToken(req, res, next) {
   const { email, password } = req.body;
