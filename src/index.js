@@ -8,8 +8,8 @@ import "colors";
 import DB from "./db/credential.js";
 
 // ***** ROUTERS *****
-import user_routers from "./routers/users.js";
-import task_routers from "./routers/tasks.js";
+import user_routers from "./v1/routers/users.js";
+import task_routers from "./v1/routers/tasks.js";
 
 // ***** INITIALIZATIONS *****
 dotenv.config();

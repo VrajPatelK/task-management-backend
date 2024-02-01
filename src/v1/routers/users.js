@@ -1,10 +1,10 @@
 import { Router } from "express";
 const router = Router();
 
-import UsersControllers from "../controllers/users.js";
-import { generateToken } from "../middlewares/generateToken.js";
-import { isAuthenticated } from "../middlewares/authentication.js";
-import { isAdmin } from "../middlewares/isAdmin.js";
+import UsersControllers from "../../controllers/users.js";
+import { generateToken } from "../../middlewares/generateToken.js";
+import { isAuthenticated } from "../../middlewares/authentication.js";
+import { isAdmin } from "../../middlewares/isAdmin.js";
 
 router.post("/login", generateToken, UsersControllers.login);
 

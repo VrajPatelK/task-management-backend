@@ -1,13 +1,13 @@
 import { Router } from "express";
 const router = Router();
-import DB from "../db/credential.js";
+import DB from "../../db/credential.js";
 
-import TasksControllers from "../controllers/tasks.js";
-import TasksQueries from "../queries/tasks.js";
+import TasksControllers from "../../controllers/tasks.js";
+import TasksQueries from "../../queries/tasks.js";
 
-import { isAdmin } from "../middlewares/isAdmin.js";
-import { isAuthenticated } from "../middlewares/authentication.js";
-import { isAdminOrAuthorized } from "../middlewares/isAdminOrAuthorized.js";
+import { isAdmin } from "../../middlewares/isAdmin.js";
+import { isAuthenticated } from "../../middlewares/authentication.js";
+import { isAdminOrAuthorized } from "../../middlewares/isAdminOrAuthorized.js";
 
 router.use(isAuthenticated);
 
