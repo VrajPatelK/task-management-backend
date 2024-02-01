@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import UserServices from "../services/users.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
+import { CONSTANTS } from "../helpers/constants.js";
 
 async function createNewUser(req, res) {
   var keys = Object.keys(req.body);
@@ -37,8 +38,8 @@ async function getUsersByUserType(req, res) {
   try {
     var { user_type } = req.params;
     if (
-      user_type !== process.env.ADMIN_ROLE &&
-      user_type !== process.env.DEVELOPER_ROLE
+      user_type !== CONSTANTS.ADMIN_ROLE &&
+      user_type !== CONSTANTS.DEVELOPER_ROLE
     ) {
       return res.status(404).json({ message: "user type doesn't found" });
     }

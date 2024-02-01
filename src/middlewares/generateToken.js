@@ -1,10 +1,7 @@
 import jwt from "jsonwebtoken";
 import DB from "../db/credential.js";
 import UsersQueries from "../queries/users.js";
-import { config } from "dotenv";
 import bcryptjs from "bcryptjs";
-
-config();
 
 async function generateToken(req, res, next) {
   const { email, password } = req.body;

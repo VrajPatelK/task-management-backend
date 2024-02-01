@@ -1,22 +1,21 @@
-// ***** PKGS *****
+// PKGS
 import express from "express";
-import dotenv from "dotenv";
+import { config } from "dotenv";
 import cors from "cors";
-import "colors";
+config();
 
-// ***** IMPORTS *****
+// IMPORTS
 import DB from "./db/credential.js";
 
-// ***** ROUTERS *****
+// ROUTERS
 import user_routers from "./v1/routers/users.js";
 import task_routers from "./v1/routers/tasks.js";
 
-// ***** INITIALIZATIONS *****
-dotenv.config();
+// INITIALIZATIONS
 const app = express();
 const PORT = Number(process.env.SERVER_PORT);
 
-// ***** MIDDLEWARES *****
+// MIDDLEWARES
 app.use(
   cors({
     origin: process.env.REACT_APP_DOMAIN,
@@ -26,13 +25,13 @@ app.use(express.json());
 app.use("/api/v1/users/", user_routers);
 app.use("/api/v1/tasks/", task_routers);
 
-// ***** SERVER *****
+// SERVER
 app.listen(PORT, async () => {
   try {
     await DB.connect();
-    console.log(`SERVER RUNS ON http://localhost:${PORT}`.bgGreen.bold);
+    console.log(`server runs on http://localhost:${PORT}`);
   } catch (error) {
-    console.log(`SERVER CRASHED http://localhost:${PORT}`.bgRed.bold);
+    console.log(`server crashed http://localhost:${PORT}`);
     await DB.end();
   }
 });

@@ -1,5 +1,4 @@
-import { config } from "dotenv";
-config();
+import { CONSTANTS } from "../helpers/constants.js";
 
 async function isAdminOrAuthorized(req, res, next) {
   try {
@@ -7,7 +6,7 @@ async function isAdminOrAuthorized(req, res, next) {
     const { userId } = req.params;
 
     if (
-      user_details.user_type !== process.env.ADMIN_ROLE &&
+      user_details.user_type !== CONSTANTS.ADMIN_ROLE &&
       user_details.id !== parseInt(userId)
     ) {
       return res.status(401).json({

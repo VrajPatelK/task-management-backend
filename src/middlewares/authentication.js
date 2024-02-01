@@ -1,6 +1,4 @@
 import jwt from "jsonwebtoken";
-import { config } from "dotenv";
-config();
 
 async function isAuthenticated(req, res, next) {
   try {

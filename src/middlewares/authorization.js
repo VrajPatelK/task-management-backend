@@ -1,6 +1,3 @@
-import { config } from "dotenv";
-config();
-
 async function isAuthorized(req, res, next) {
   try {
     const user_details = req?.user_details;

@@ -1,15 +1,21 @@
+// PKGS
 import { Router } from "express";
-const router = Router();
 
+// CONTROLLERS
 import UsersControllers from "../../controllers/users.js";
+
+// MIDDLEWARES
 import { generateToken } from "../../middlewares/generateToken.js";
 import { isAuthenticated } from "../../middlewares/authentication.js";
 import { isAdmin } from "../../middlewares/isAdmin.js";
 
-router.post("/login", generateToken, UsersControllers.login);
+// INITIALIZATION
+const router = Router();
 
-router.use(isAuthenticated);
+router.post("/login", generateToken, UsersControllers.login); // LOGIN-ROUTER
+router.use(isAuthenticated); //MIDDLEWARE
 
+// ROUTERS
 router.get("/", isAdmin, UsersControllers.getAllUsers);
 router.get("/search/:search", isAdmin, UsersControllers.getAllUsersBySearch);
 router.post("/create", isAdmin, UsersControllers.createNewUser);
@@ -19,7 +25,6 @@ router.get(
   UsersControllers.getUsersByUserType
 );
 router.delete("/delete/:userId", isAdmin, UsersControllers.deleteUserById);
-
 router.get("/:userId", UsersControllers.getUserById);
 router.put("/edit/:userId", UsersControllers.updateUserById);
 

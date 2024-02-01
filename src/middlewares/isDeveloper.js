@@ -1,11 +1,10 @@
-import { config } from "dotenv";
-config();
+import { CONSTANTS } from "../helpers/constants.js";
 
 async function isDeveloper(req, res, next) {
   try {
     const user_details = req?.user_details;
 
-    if (user_details.user_type !== process.env.DEVELOPER_ROLE) {
+    if (user_details.user_type !== CONSTANTS.DEVELOPER_ROLE) {
       return res.status(401).json({
         message: "unauthorized user!",
       });
