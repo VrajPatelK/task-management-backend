@@ -1,8 +1,5 @@
-import { pool } from "../db/credential.js";
-
 import TasksServices from "../services/tasks.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
-import format from "pg-format";
 
 async function createNewTask(req, res) {
   if (req.body.title) {

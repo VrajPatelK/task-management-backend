@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { pool } from "../db/credential.js";
+import DB from "../db/credential.js";
 import UsersQueries from "../queries/users.js";
 import { config } from "dotenv";
 import bcryptjs from "bcryptjs";
@@ -10,7 +10,7 @@ async function generateToken(req, res, next) {
   const { email, password } = req.body;
   try {
     // fetch user
-    const records = await pool.query(UsersQueries.getUserByEmail, [email]);
+    const records = await DB.query(UsersQueries.getUserByEmail, [email]);
 
     // verify credentials
     if (!records.rowCount) {

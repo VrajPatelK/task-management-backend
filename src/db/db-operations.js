@@ -1,13 +1,13 @@
-import { pool } from "./credential.js";
+import DB from "./credential.js";
 
-function open_connection(params) {
+function open_connection() {
   // Event listener for successful connection
-  pool.on("connect", (client) => {
+  DB.on("connect", (client) => {
     console.log("Client connected to the database");
   });
 }
 
-function close_connection(params) {
+function close_connection() {
   // Close the connection pool when your application is shutting down
   pool
     .end()
@@ -15,16 +15,16 @@ function close_connection(params) {
     .catch((err) => console.error("Error closing connection pool", err));
 }
 
-function remove(params) {
+function remove() {
   // Event listener for client disconnection
-  pool.on("remove", (client) => {
+  DB.on("remove", (client) => {
     console.log("Client removed from the connection pool");
   });
 }
 
-function db_error(params) {
+function db_error() {
   // Event listener for errors
-  pool.on("error", (err, client) => {
+  DB.on("error", (err, client) => {
     console.error("Unexpected error on idle client", err);
   });
 }

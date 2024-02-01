@@ -1,11 +1,11 @@
 import format from "pg-format";
 import TasksQueries from "../queries/tasks.js";
-import { pool } from "../db/credential.js";
+import DB from "../db/credential.js";
 
 async function createNewTask(columns, colNumbers, values) {
   var query = TasksQueries.createNewTask(columns, colNumbers);
   try {
-    let records = await pool.query(query, values);
+    let records = await DB.query(query, values);
     return records.rows;
   } catch (error) {
     return res
@@ -16,7 +16,7 @@ async function createNewTask(columns, colNumbers, values) {
 
 async function getAllTasks() {
   try {
-    let records = await pool.query(TasksQueries.getAllTasks);
+    let records = await DB.query(TasksQueries.getAllTasks);
     return records.rows;
   } catch (error) {
     return res
@@ -27,7 +27,7 @@ async function getAllTasks() {
 
 async function getAllTasksByStatus(status) {
   try {
-    let records = await pool.query(TasksQueries.getAllTasksByStatus, [status]);
+    let records = await DB.query(TasksQueries.getAllTasksByStatus, [status]);
     return records.rows;
   } catch (error) {
     return res
@@ -38,7 +38,7 @@ async function getAllTasksByStatus(status) {
 
 async function getAllTasksByStatusAndUserId(userId, status) {
   try {
-    let records = await pool.query(TasksQueries.getAllTasksByStatusAndUserId, [
+    let records = await DB.query(TasksQueries.getAllTasksByStatusAndUserId, [
       userId,
       status,
     ]);
@@ -57,7 +57,7 @@ async function getAllTasksBySearchAndUserId(userId, searchTerms) {
       searchTerms,
       searchTerms
     );
-    let records = await pool.query(query, [userId]);
+    let records = await DB.query(query, [userId]);
     return records.rows;
   } catch (error) {
     return res
@@ -73,7 +73,7 @@ async function getAllTasksBySearch(searchTerms) {
       searchTerms,
       searchTerms
     );
-    let records = await pool.query(query);
+    let records = await DB.query(query);
     return records.rows;
   } catch (error) {
     return res
@@ -84,7 +84,7 @@ async function getAllTasksBySearch(searchTerms) {
 
 async function getTaskById(taskId) {
   try {
-    let records = await pool.query(TasksQueries.getTaskById, [taskId]);
+    let records = await DB.query(TasksQueries.getTaskById, [taskId]);
     return records.rows;
   } catch (error) {
     return res
@@ -95,7 +95,7 @@ async function getTaskById(taskId) {
 
 async function getTaskByUserId(taskId, userId) {
   try {
-    let records = await pool.query(TasksQueries.getTaskByUserId, [
+    let records = await DB.query(TasksQueries.getTaskByUserId, [
       taskId,
       userId,
     ]);
@@ -109,7 +109,7 @@ async function getTaskByUserId(taskId, userId) {
 
 async function getAllTasksByUserId(userId) {
   try {
-    let records = await pool.query(TasksQueries.getAllTasksByUserId, [userId]);
+    let records = await DB.query(TasksQueries.getAllTasksByUserId, [userId]);
     return records.rows;
   } catch (error) {
     return res
@@ -121,7 +121,7 @@ async function getAllTasksByUserId(userId) {
 async function updateTaskById(result, values) {
   var query = TasksQueries.updateTaskById(result);
   try {
-    let records = await pool.query(query, values);
+    let records = await DB.query(query, values);
     return records.rows;
   } catch (error) {
     return res
@@ -132,7 +132,7 @@ async function updateTaskById(result, values) {
 
 async function deleteTaskById(taskId) {
   try {
-    let records = await pool.query(TasksQueries.deleteTaskById, [taskId]);
+    let records = await DB.query(TasksQueries.deleteTaskById, [taskId]);
     return records.rows;
   } catch (error) {
     return res

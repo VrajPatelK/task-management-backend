@@ -1,11 +1,11 @@
 import format from "pg-format";
 import UsersQueries from "../queries/users.js";
-import { pool } from "../db/credential.js";
+import DB from "../db/credential.js";
 
 async function createNewUser(columns, colNumbers, values) {
   var query = UsersQueries.createNewUser(columns, colNumbers);
   try {
-    let records = await pool.query(query, values);
+    let records = await DB.query(query, values);
     return records.rows;
   } catch (error) {
     return res
@@ -16,7 +16,7 @@ async function createNewUser(columns, colNumbers, values) {
 
 async function getAllUsers() {
   try {
-    let records = await pool.query(UsersQueries.getAllUsers);
+    let records = await DB.query(UsersQueries.getAllUsers);
     return records.rows;
   } catch (error) {
     return res
@@ -27,9 +27,7 @@ async function getAllUsers() {
 
 async function getUsersByUserType(user_type) {
   try {
-    let records = await pool.query(UsersQueries.getUsersByUserType, [
-      user_type,
-    ]);
+    let records = await DB.query(UsersQueries.getUsersByUserType, [user_type]);
     return records.rows;
   } catch (error) {
     return res
@@ -45,7 +43,7 @@ async function getAllUsersBySearch(searchTerms) {
       searchTerms,
       searchTerms
     );
-    let records = await pool.query(query);
+    let records = await DB.query(query);
     return records.rows;
   } catch (error) {
     return res
@@ -56,7 +54,7 @@ async function getAllUsersBySearch(searchTerms) {
 
 async function getUserById(userId) {
   try {
-    let records = await pool.query(UsersQueries.getUserById, [userId]);
+    let records = await DB.query(UsersQueries.getUserById, [userId]);
     return records.rows;
   } catch (error) {
     return res
@@ -68,7 +66,7 @@ async function getUserById(userId) {
 async function updateUserById(values, result) {
   var query = UsersQueries.updateUserById(result);
   try {
-    let records = await pool.query(query, values);
+    let records = await DB.query(query, values);
     return records.rows;
   } catch (error) {
     return res
@@ -79,7 +77,7 @@ async function updateUserById(values, result) {
 
 async function deleteUserById(userId) {
   try {
-    let users = await pool.query(UsersQueries.deleteUserById, [userId]);
+    let users = await DB.query(UsersQueries.deleteUserById, [userId]);
     return users;
   } catch (error) {
     return res

@@ -1,6 +1,6 @@
 import { Router } from "express";
 const router = Router();
-import { pool } from "../db/credential.js";
+import DB from "../db/credential.js";
 
 import TasksControllers from "../controllers/tasks.js";
 import TasksQueries from "../queries/tasks.js";
@@ -39,7 +39,7 @@ router.post("/create", isAdmin, TasksControllers.createNewTask);
 router.put(
   "/edit/status/:taskId",
   async (req, res, next) => {
-    const records = await pool.query(TasksQueries.getTaskById, [
+    const records = await DB.query(TasksQueries.getTaskById, [
       req.params.taskId,
     ]);
     if (!records.rowCount) {
