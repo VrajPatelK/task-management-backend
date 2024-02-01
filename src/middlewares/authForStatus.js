@@ -1,3 +1,7 @@
+// IMPORTS
+import DB from "../db/credential.js";
+import TasksQueries from "../queries/tasks.js";
+
 async function authForStatus(req, res, next) {
   try {
     const records = await DB.query(TasksQueries.getTaskById, [
