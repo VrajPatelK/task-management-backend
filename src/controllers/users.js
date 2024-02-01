@@ -1,32 +1,20 @@
-import { pool } from "../db/credential.js";
 import bcryptjs from "bcryptjs";
-
-import {
-  createNewUser,
-  getAllUsers,
-  getUsersByUserType,
-  getUserById,
-  updateUserById,
-  deleteUserById,
-  getAllUsersBySearch,
-} from "../queries/users.js";
+import UserServices from "../services/users.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
-import format from "pg-format";
 
-async function createNewUserApi(req, res) {
+async function createNewUser(req, res) {
   var keys = Object.keys(req.body);
   if (req.body.password) {
     req.body.password = bcryptjs.hashSync(req.body.password);
   }
+  const { columns, colNumbers } = exportKeys(keys);
   var values = Object.values(req.body);
 
-  const result = exportKeys(keys);
-  var query = createNewUser(result.columns, result.colNumbers);
   try {
-    let records = await pool.query(query, values);
+    let users = await UserServices.createNewUser(columns, colNumbers, values);
     return res
       .status(200)
-      .json({ message: `records inserted : ${records?.rowCount}` });
+      .json({ message: `records inserted : ${users?.length}` });
   } catch (error) {
     return res
       .status(500)
@@ -34,10 +22,10 @@ async function createNewUserApi(req, res) {
   }
 }
 
-async function getAllUsersApi(req, res) {
+async function getAllUsers(req, res) {
   try {
-    let records = await pool.query(getAllUsers);
-    return res.status(200).json(records.rows);
+    let users = await UserServices.getAllUsers();
+    return res.status(200).json(users);
   } catch (error) {
     return res
       .status(500)
@@ -45,7 +33,7 @@ async function getAllUsersApi(req, res) {
   }
 }
 
-async function getUsersByUserTypeApi(req, res) {
+async function getUsersByUserType(req, res) {
   try {
     var { user_type } = req.params;
     if (
@@ -54,8 +42,8 @@ async function getUsersByUserTypeApi(req, res) {
     ) {
       return res.status(404).json({ message: "user type doesn't found" });
     }
-    let records = await pool.query(getUsersByUserType, [user_type]);
-    return res.status(200).json(records.rows);
+    let users = await UserServices.getUsersByUserType(user_type);
+    return res.status(200).json(users);
   } catch (error) {
     return res
       .status(500)
@@ -63,7 +51,7 @@ async function getUsersByUserTypeApi(req, res) {
   }
 }
 
-async function getAllUsersBySearchApi(req, res) {
+async function getAllUsersBySearch(req, res) {
   try {
     const { search } = req.params;
     var searchTerms = search
@@ -72,9 +60,8 @@ async function getAllUsersBySearchApi(req, res) {
       .split(" ")
       .map((term) => `%${term}%`);
 
-    var query = format(getAllUsersBySearch, searchTerms, searchTerms);
-    let records = await pool.query(query);
-    return res.status(200).json(records.rows);
+    let users = await UserServices.getAllUsersBySearch(searchTerms);
+    return res.status(200).json(users);
   } catch (error) {
     return res
       .status(500)
@@ -82,14 +69,11 @@ async function getAllUsersBySearchApi(req, res) {
   }
 }
 
-async function getUserByIdApi(req, res) {
+async function getUserById(req, res) {
   const { userId } = req.params;
   try {
-    let records = await pool.query(getUserById, [userId]);
-    if (!records.rowCount) {
-      return res.status(404).json({ message: "user doesn't found!" });
-    }
-    return res.status(200).json(records.rows);
+    let users = await UserServices.getUserById(userId);
+    return res.status(200).json(users);
   } catch (error) {
     return res
       .status(500)
@@ -97,24 +81,22 @@ async function getUserByIdApi(req, res) {
   }
 }
 
-async function updateUserByIdApi(req, res) {
+async function updateUserById(req, res) {
   const { userId } = req.params;
-  var keys = Object.keys(req.body);
   if (req.body.password) {
     req.body.password = bcryptjs.hashSync(req.body.password);
   }
+
+  var keys = Object.keys(req.body);
   var values = Object.values(req.body);
   values.unshift(userId);
 
   const result = exportKeysForUpdate(keys);
-  var query = updateUserById(result);
-
   try {
-    let records = await pool.query(query, values);
-
+    let users = await UserServices.updateUserById(values, result);
     return res
       .status(200)
-      .json({ message: `records updated : ${records.rowCount}` });
+      .json({ message: `records updated : ${users?.length}` });
   } catch (error) {
     return res
       .status(500)
@@ -122,13 +104,13 @@ async function updateUserByIdApi(req, res) {
   }
 }
 
-async function deleteUserByIdApi(req, res) {
+async function deleteUserById(req, res) {
   const { userId } = req.params;
   try {
-    let records = await pool.query(deleteUserById, [userId]);
+    let users = await UserServices.deleteUserById(userId);
     return res
       .status(200)
-      .json({ message: `records deleted : ${records.rowCount}` });
+      .json({ message: `records deleted : ${users?.length}` });
   } catch (error) {
     return res
       .status(500)
@@ -136,9 +118,8 @@ async function deleteUserByIdApi(req, res) {
   }
 }
 
-async function loginApi(req, res) {
+async function login(req, res) {
   try {
-    //
     return res.status(200).json({
       message: "signed in!",
       user: req.body,
@@ -150,13 +131,13 @@ async function loginApi(req, res) {
   }
 }
 
-export {
-  createNewUserApi,
-  getAllUsersApi,
-  getUsersByUserTypeApi,
-  getAllUsersBySearchApi,
-  getUserByIdApi,
-  updateUserByIdApi,
-  deleteUserByIdApi,
-  loginApi,
+export default {
+  createNewUser,
+  getAllUsers,
+  getUsersByUserType,
+  getAllUsersBySearch,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+  login,
 };

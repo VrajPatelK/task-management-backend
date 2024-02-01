@@ -1,36 +1,21 @@
 import { pool } from "../db/credential.js";
 
-import {
-  createNewTask,
-  deleteTaskById,
-  getAllTasks,
-  getTaskById,
-  getTaskByUserId,
-  getAllTasksByUserId,
-  updateTaskById,
-  getAllTasksByStatus,
-  getAllTasksBySearch,
-  getAllTasksByStatusAndUserId,
-  getAllTasksBySearchAndUserId,
-} from "../queries/tasks.js";
+import TasksServices from "../services/tasks.js";
 import { exportKeys, exportKeysForUpdate } from "../helpers/helpers.js";
 import format from "pg-format";
 
-async function createNewTaskApi(req, res) {
+async function createNewTask(req, res) {
   if (req.body.title) {
     req.body.title = req.body?.title.toLowerCase();
   }
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
-
-  const result = exportKeys(keys);
-  var query = createNewTask(result.columns, result.colNumbers);
-
+  const { columns, colNumbers } = exportKeys(keys);
   try {
-    let records = await pool.query(query, values);
+    let tasks = await TasksServices.createNewTask(columns, colNumbers, values);
     return res
       .status(200)
-      .json({ message: `records inserted : ${records?.rowCount}` });
+      .json({ message: `tasks inserted : ${tasks?.length}` });
   } catch (error) {
     return res
       .status(500)
@@ -38,10 +23,10 @@ async function createNewTaskApi(req, res) {
   }
 }
 
-async function getAllTasksApi(req, res) {
+async function getAllTasks(req, res) {
   try {
-    let records = await pool.query(getAllTasks);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getAllTasks();
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -49,25 +34,25 @@ async function getAllTasksApi(req, res) {
   }
 }
 
-async function getAllTasksByStatusApi(req, res) {
+async function getAllTasksByStatus(req, res) {
   try {
     const { status } = req.params;
-    let records = await pool.query(getAllTasksByStatus, [status]);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getAllTasksByStatus(status);
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
       .json({ message: "Internal Server Error", errorMessage: error.message });
   }
 }
-async function getAllTasksByStatusAndUserIdApi(req, res) {
+async function getAllTasksByStatusAndUserId(req, res) {
   try {
     const { userId, status } = req.params;
-    let records = await pool.query(getAllTasksByStatusAndUserId, [
+    let tasks = await TasksServices.getAllTasksByStatusAndUserId(
       userId,
-      status,
-    ]);
-    return res.status(200).json(records.rows);
+      status
+    );
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -75,7 +60,7 @@ async function getAllTasksByStatusAndUserIdApi(req, res) {
   }
 }
 
-async function getAllTasksBySearchAndUserIdApi(req, res) {
+async function getAllTasksBySearchAndUserId(req, res) {
   try {
     const { search, userId } = req.params;
     var searchTerms = search
@@ -84,9 +69,11 @@ async function getAllTasksBySearchAndUserIdApi(req, res) {
       .split(" ")
       .map((term) => `%${term}%`);
 
-    var query = format(getAllTasksBySearchAndUserId, searchTerms, searchTerms);
-    let records = await pool.query(query, [userId]);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getAllTasksBySearchAndUserId(
+      userId,
+      searchTerms
+    );
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -94,7 +81,7 @@ async function getAllTasksBySearchAndUserIdApi(req, res) {
   }
 }
 
-async function getAllTasksBySearchApi(req, res) {
+async function getAllTasksBySearch(req, res) {
   try {
     const { search } = req.params;
     var searchTerms = search
@@ -102,10 +89,8 @@ async function getAllTasksBySearchApi(req, res) {
       .trim()
       .split(" ")
       .map((term) => `%${term}%`);
-
-    var query = format(getAllTasksBySearch, searchTerms, searchTerms);
-    let records = await pool.query(query);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getAllTasksBySearch(searchTerms);
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -113,11 +98,11 @@ async function getAllTasksBySearchApi(req, res) {
   }
 }
 
-async function getTaskByIdApi(req, res) {
+async function getTaskById(req, res) {
   const { taskId } = req.params;
   try {
-    let records = await pool.query(getTaskById, [taskId]);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getTaskById(taskId);
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -125,11 +110,11 @@ async function getTaskByIdApi(req, res) {
   }
 }
 
-async function getTaskByUserIdApi(req, res) {
+async function getTaskByUserId(req, res) {
   const { taskId, userId } = req.params;
   try {
-    let records = await pool.query(getTaskByUserId, [taskId, userId]);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getTaskByUserId(taskId, userId);
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -137,11 +122,11 @@ async function getTaskByUserIdApi(req, res) {
   }
 }
 
-async function getAllTasksByUserIdApi(req, res) {
+async function getAllTasksByUserId(req, res) {
   const { userId } = req.params;
   try {
-    let records = await pool.query(getAllTasksByUserId, [userId]);
-    return res.status(200).json(records.rows);
+    let tasks = await TasksServices.getAllTasksByUserId(userId);
+    return res.status(200).json(tasks);
   } catch (error) {
     return res
       .status(500)
@@ -149,7 +134,7 @@ async function getAllTasksByUserIdApi(req, res) {
   }
 }
 
-async function updateTaskByIdApi(req, res) {
+async function updateTaskById(req, res) {
   const { taskId } = req.params;
   if (req.body.title) {
     req.body.title = req.body?.title.toLowerCase();
@@ -157,15 +142,13 @@ async function updateTaskByIdApi(req, res) {
   var keys = Object.keys(req.body);
   var values = Object.values(req.body);
   values.unshift(taskId);
-
   const result = exportKeysForUpdate(keys);
-  var query = updateTaskById(result);
 
   try {
-    let records = await pool.query(query, values);
+    let tasks = await TasksServices.updateTaskById(result, values);
     return res
       .status(200)
-      .json({ message: `records updated : ${records.rowCount}` });
+      .json({ message: `tasks updated : ${tasks?.length}` });
   } catch (error) {
     return res
       .status(500)
@@ -173,29 +156,29 @@ async function updateTaskByIdApi(req, res) {
   }
 }
 
-async function deleteTaskByIdApi(req, res) {
+async function deleteTaskById(req, res) {
   const { taskId } = req.params;
   try {
-    let records = await pool.query(deleteTaskById, [taskId]);
+    let tasks = await TasksServices.deleteTaskById(taskId);
     return res
       .status(200)
-      .json({ message: `records deleted : ${records.rowCount}` });
+      .json({ message: `tasks deleted : ${tasks?.length}` });
   } catch (error) {
     return res
       .status(500)
       .json({ message: "Internal Server Error", errorMessage: error.message });
   }
 }
-export {
-  createNewTaskApi,
-  getAllTasksApi,
-  getAllTasksByStatusApi,
-  getAllTasksByStatusAndUserIdApi,
-  getAllTasksBySearchAndUserIdApi,
-  getTaskByIdApi,
-  getTaskByUserIdApi,
-  getAllTasksByUserIdApi,
-  getAllTasksBySearchApi,
-  updateTaskByIdApi,
-  deleteTaskByIdApi,
+export default {
+  createNewTask,
+  getAllTasks,
+  getAllTasksByStatus,
+  getAllTasksByStatusAndUserId,
+  getAllTasksBySearchAndUserId,
+  getTaskById,
+  getTaskByUserId,
+  getAllTasksByUserId,
+  getAllTasksBySearch,
+  updateTaskById,
+  deleteTaskById,
 };

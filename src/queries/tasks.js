@@ -53,7 +53,7 @@ WHERE id = $1`;
 
 const deleteTaskById = `DELETE FROM TASKS WHERE id = $1`;
 
-export {
+export default {
   createNewTask,
   getAllTasks,
   getAllTasksByStatus,

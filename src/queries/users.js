@@ -17,7 +17,7 @@ WHERE id = $1`;
 
 const deleteUserById = `DELETE FROM USERS WHERE id = $1`;
 
-export {
+export default {
   createNewUser,
   getAllUsers,
   getUsersByUserType,
