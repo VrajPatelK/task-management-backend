@@ -31,7 +31,7 @@ app.listen(PORT, async () => {
     await DB.connect();
     console.log(`server runs on http://localhost:${PORT}`);
   } catch (error) {
-    console.log(`server crashed http://localhost:${PORT}`);
+    console.log(`server crashed on http://localhost:${PORT}`);
     await DB.end();
   }
 });
