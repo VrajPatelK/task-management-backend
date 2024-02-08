@@ -1,0 +1,43 @@
+// PKGS
+import jwt from "jsonwebtoken";
+import bcryptjs from "bcryptjs";
+
+// IMPORTS
+import DB from "../db/credential.js";
+import UsersQueries from "../queries/users.js";
+
+async function generateToken(req, res, next) {
+  const { email, password } = req.body;
+  try {
+    // fetch user
+    const records = await DB.query(UsersQueries.getUserByEmail, [email]);
+
+    // verify credentials
+    if (!records.rowCount) {
+      return res.status(404).json({
+        message: "user doesn't found with given credentials!",
+      });
+    }
+
+    const user = records.rows.at(0);
+    var isPasTrue = bcryptjs.compareSync(password, user?.password);
+    if (!isPasTrue) {
+      return res.status(404).json({
+        message: "password doesn't match!",
+      });
+    }
+
+    // token generate
+    const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
+    user.token = token;
+    req.body = user;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      message: "token generation failure",
+      errorMessage: error.message,
+    });
+  }
+}
+
+export { generateToken };
